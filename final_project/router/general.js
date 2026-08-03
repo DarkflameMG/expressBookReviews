@@ -20,11 +20,25 @@ public_users.post("/register", (req,res) => {
   return res.status(404).json({message: "Unable to register user"});
 });
 
-
+function getAllBooks(){
+    return new Promise((resolve, reject) => {
+        const result = Object.values(books);
+        if(result.length > 0){
+            resolve(result);
+        } else {
+            reject("No books found");
+        }
+    });
+}
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books,null,3));
-  return res.status(200).json({message: "Get all Books OK"});
+//   res.send(JSON.stringify(books,null,3));
+//   return res.status(200).json({message: "Get all Books OK"});
+    getAllBooks()
+    .then(data => res.json(data))
+    .catch(err => res.status(404).json({
+        message: err
+    }));
 });
 
 // Get book details based on ISBN
